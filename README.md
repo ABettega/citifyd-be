@@ -20,4 +20,4 @@ POSTGRES_PORT=5432
 ```
 There are stores and products already seeded.
 
-The endpoints can be reached at <server>/v1/store and <server>/v1/product
+The endpoints can be reached at localhost:3000/v1/store and localhost:3000/v1/product
