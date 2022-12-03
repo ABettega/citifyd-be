@@ -8,7 +8,12 @@ const listStoresDal = async () => {
         s.store_fee as storeFee
       FROM store s;
     `;
-    return queryResult;
+
+    return {
+      success: true,
+      entries: queryResult.length,
+      storeList: queryResult,
+    };
   } catch (error) {
     throw new Error(error);
   }

@@ -28,7 +28,8 @@ const listStores = async (req, res) => {
 
 /**
  * @param {string} name - The name for the store being created. Required.
- * @param {string} fee - The fee for that particular store. Not required. Default value is 0.1
+ * @param {string} fee - The fee for that particular store. Not required. Default value is 0.1.
+ * Any value between 0 and 100 is allowed.
  *
  * @description
  * Creates a new store with the specified name and fee.
@@ -44,9 +45,11 @@ const createStore = async (req, res) => {
 
     if (
       !name
+      || fee < 0
+      || fee > 100
     ) {
       res.status(400).json({
-        message: 'Malformed request - Parameter(s) missing',
+        message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
     }
@@ -88,7 +91,7 @@ const createStore = async (req, res) => {
  *
  * @returns {String} A message confirming the store update.
  */
- const updateStore = async (req, res) => {
+const updateStore = async (req, res) => {
   try {
     const {
       storeId,
@@ -98,9 +101,11 @@ const createStore = async (req, res) => {
 
     if (
       !storeId
+      || fee < 0
+      || fee > 100
     ) {
       res.status(400).json({
-        message: 'Malformed request - Parameter(s) missing',
+        message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
     }
@@ -109,14 +114,14 @@ const createStore = async (req, res) => {
 
     if (storeUpdateResult.success) {
       auditLog({
-        message: `The store with ID ${storeId} has been updated! The new name value is ${name}, and fee is ${fee}!`,
+        message: `The store with ID ${storeId} has been updated! The changes are ${JSON.stringify({ name, fee })}!`,
         location: 'PUT /v1/store',
         severity: 'INFO',
       });
       res.status(200).json(storeUpdateResult.message);
     } else {
       auditLog({
-        message: `There was an attempt to update the store with ID ${storeID}, but an error occurred! Error: ${storeUpdateResult.message}`,
+        message: `There was an attempt to update the store with ID ${storeId}, but an error occurred! Error: ${storeUpdateResult.message}`,
         location: 'PUT /v1/store',
         severity: 'WARN',
       });

@@ -8,10 +8,6 @@ const listStoresService = async () => {
   try {
     const storeList = await listStoresDal();
 
-    if (storeList.length === 0) {
-      return [];
-    }
-
     return storeList;
   } catch (error) {
     throw new Error(error);
