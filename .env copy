@@ -1,0 +1,5 @@
+POSTGRES_DB=every_test
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=adminpassword
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432

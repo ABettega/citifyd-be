@@ -39,7 +39,39 @@ const createStoreDal = async ({
   }
 };
 
+const updateStoreDal = async ({
+  storeId,
+  name,
+  fee,
+}) => {
+  try {
+    const validIdResult = await sql`
+      SELECT id
+      FROM store
+      WHERE id = ${storeId};
+    `;
+
+    if (!validIdResult) {
+      return {
+        success: false,
+        message: 'The specified store does not exist!',
+      };
+    }
+
+    await sql`
+    `;
+
+    return {
+      success: true,
+      message: 'Store updated successfully!',
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   listStoresDal,
   createStoreDal,
+  updateStoreDal,
 };

@@ -9,6 +9,7 @@ CREATE TABLE product (
     id INT GENERATED ALWAYS AS IDENTITY,
     product_name VARCHAR(255) NOT NULL,
     product_value FLOAT NOT NULL,
+    product_active BOOLEAN NOT NULL,
     store_id INT,
     PRIMARY KEY(id),
     CONSTRAINT fk_store_id

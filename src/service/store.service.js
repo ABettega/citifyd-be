@@ -1,6 +1,7 @@
 const {
   listStoresDal,
   createStoreDal,
+  updateStoreDal,
 } = require('../dal/store.dal');
 
 const listStoresService = async () => {
@@ -32,7 +33,25 @@ const createStoreService = async ({
   }
 };
 
+const updateStoreService = async ({
+  storeId,
+  name,
+  fee,
+}) => {
+  try {
+    const storeUpdateResult = await updateStoreDal({
+      storeId,
+      name,
+      fee,
+    });
+    return storeUpdateResult;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   listStoresService,
   createStoreService,
+  updateStoreService,
 };

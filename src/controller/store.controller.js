@@ -2,6 +2,7 @@ const { auditLog } = require('../util/logger');
 const {
   listStoresService,
   createStoreService,
+  updateStoreService,
 } = require('../service/store.service');
 
 /**
@@ -77,7 +78,62 @@ const createStore = async (req, res) => {
   }
 };
 
+/**
+ * @param {string} name - The new name for the specified store
+ * @param {string} fee - The new fee for the specified store
+ * @param {number} storeId - The ID for the store being updated
+ *
+ * @description
+ * Updates an existing store based on the ID.
+ *
+ * @returns {String} A message confirming the store update.
+ */
+ const updateStore = async (req, res) => {
+  try {
+    const {
+      storeId,
+      name,
+      fee,
+    } = req.body;
+
+    if (
+      !storeId
+    ) {
+      res.status(400).json({
+        message: 'Malformed request - Parameter(s) missing',
+      });
+      return;
+    }
+
+    const storeUpdateResult = await updateStoreService({ storeId, name, fee });
+
+    if (storeUpdateResult.success) {
+      auditLog({
+        message: `The store with ID ${storeId} has been updated! The new name value is ${name}, and fee is ${fee}!`,
+        location: 'PUT /v1/store',
+        severity: 'INFO',
+      });
+      res.status(200).json(storeUpdateResult.message);
+    } else {
+      auditLog({
+        message: `There was an attempt to update the store with ID ${storeID}, but an error occurred! Error: ${storeUpdateResult.message}`,
+        location: 'PUT /v1/store',
+        severity: 'WARN',
+      });
+      res.status(400).json(storeUpdateResult.message);
+    }
+  } catch (error) {
+    auditLog({
+      message: error.message,
+      location: 'PUT /v1/store',
+      severity: 'ERROR',
+    });
+    res.status(400).json(error);
+  }
+};
+
 module.exports = {
   listStores,
   createStore,
+  updateStore,
 };
