@@ -9,11 +9,7 @@ const listStoresDal = async () => {
       FROM store s;
     `;
 
-    return {
-      success: true,
-      entries: queryResult.length,
-      storeList: queryResult,
-    };
+    return queryResult;
   } catch (error) {
     throw new Error(error);
   }

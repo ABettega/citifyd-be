@@ -8,7 +8,11 @@ const listStoresService = async () => {
   try {
     const storeList = await listStoresDal();
 
-    return storeList;
+    return {
+      success: true,
+      entries: storeList.length,
+      storeList,
+    };
   } catch (error) {
     throw new Error(error);
   }
@@ -23,6 +27,7 @@ const createStoreService = async ({
       name,
       fee,
     });
+
     return storeCreationResult;
   } catch (error) {
     throw new Error(error);

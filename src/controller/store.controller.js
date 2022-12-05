@@ -40,12 +40,12 @@ const createStore = async (req, res) => {
   try {
     const {
       name,
-      fee = 0.1,
+      fee = 1,
     } = req.body;
 
     if (
       !name
-      || fee < 0
+      || fee < 1
       || fee > 100
     ) {
       res.status(400).json({
