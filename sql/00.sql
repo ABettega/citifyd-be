@@ -10,7 +10,11 @@ CREATE TABLE product (
     product_name VARCHAR(255) NOT NULL,
     product_value FLOAT NOT NULL,
     product_active BOOLEAN NOT NULL,
-    PRIMARY KEY(id)
+    store_id INT NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_store_id
+        FOREIGN KEY(store_id)
+            REFERENCES store(id)
 );
 
 CREATE TABLE transaction (
