@@ -14,11 +14,17 @@ const listProductsService = async (storeId) => {
       };
     }
 
+    const fixedProductList = productList.map((product) => {
+      const fixedProduct = { ...product };
+      fixedProduct.productValue /= 100;
+      return fixedProduct;
+    });
+
     return {
       success: true,
       storeId,
-      entries: productList.length,
-      products: productList,
+      entries: fixedProductList.length,
+      products: fixedProductList,
     };
   } catch (error) {
     throw new Error(error);
@@ -31,9 +37,11 @@ const createProductService = async ({
   storeId,
 }) => {
   try {
+    const valueInCents = Math.round(value * 100);
+
     const productCreationResult = await createProductDal({
       name,
-      value,
+      value: valueInCents,
       storeId,
     });
 

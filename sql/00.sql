@@ -8,7 +8,7 @@ CREATE TABLE store (
 CREATE TABLE product (
     id INT GENERATED ALWAYS AS IDENTITY,
     product_name VARCHAR(255) NOT NULL,
-    product_value FLOAT NOT NULL,
+    product_value INTEGEr NOT NULL,
     product_active BOOLEAN NOT NULL,
     store_id INT NOT NULL,
     PRIMARY KEY(id),
@@ -22,10 +22,10 @@ CREATE TABLE transaction (
     store_id INT NOT NULL,
     product_id INT NOT NULL,
     product_name_at_transaction VARCHAR(255) NOT NULL,
-    value_full FLOAT NOT NULL,
-    value_store FLOAT NOT NULL,
-    value_marketplace FLOAT NOT NULL,
-    value_pay_gateway FLOAT NOT NULL,
+    value_full INTEGER NOT NULL,
+    value_store INTEGER NOT NULL,
+    value_marketplace INTEGER NOT NULL,
+    value_pay_gateway INTEGER NOT NULL,
     transaction_date TIMESTAMP,
     PRIMARY KEY(id),
     CONSTRAINT fk_store_id

@@ -1,13 +1,14 @@
 const transactionCalculator = ({ productValue, storeFee }) => {
   let valueCalculating = productValue;
 
-  const valuePayGateway = valueCalculating * 0.01;
+  const valuePayGateway = Math.round(valueCalculating * 0.01);
   valueCalculating -= valuePayGateway;
 
-  const valueMarketplace = valueCalculating * ((storeFee - 1) / 100);
+  const valueMarketplace = Math.round(productValue * ((storeFee - 1) / 100));
   valueCalculating -= valueMarketplace;
 
   const valueStore = valueCalculating;
+  console.log({ productValue, valueCalculating, valuePayGateway, valueMarketplace, valueStore })
 
   return {
     valueFull: productValue,

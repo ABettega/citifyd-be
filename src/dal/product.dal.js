@@ -14,6 +14,7 @@ const listProductsDal = async (storeId) => {
 
     const queryResult = await sql`
       SELECT
+        p.id as "productId",
         p.product_name as "productName",
         p.product_value as "productValue",
         p.product_active as "productActive"
