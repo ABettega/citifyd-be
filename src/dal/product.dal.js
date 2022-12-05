@@ -15,11 +15,30 @@ const listProductsDal = async (storeId) => {
     const queryResult = await sql`
       SELECT
         p.id as "productId",
+        p.store_id as "storeId",
         p.product_name as "productName",
         p.product_value as "productValue",
         p.product_active as "productActive"
       FROM product p
       WHERE p.store_id = ${storeId};
+    `;
+
+    return queryResult;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const listInactiveProductsDal = async () => {
+  try {
+    const queryResult = await sql`
+      SELECT
+        p.id as "productId",
+        p.store_id as "storeId",
+        p.product_name as "productName",
+        p.product_value as "productValue"
+      FROM product p
+      WHERE p.product_active = FALSE;
     `;
 
     return queryResult;
@@ -63,5 +82,6 @@ const createProductDal = async ({
 
 module.exports = {
   listProductsDal,
+  listInactiveProductsDal,
   createProductDal,
 };

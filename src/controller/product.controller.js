@@ -1,6 +1,7 @@
 const { auditLog } = require('../util/logger');
 const {
   listProductsService,
+  listInactiveProductsService,
   createProductService,
   // updateStoreService,
 } = require('../service/product.service');
@@ -9,9 +10,9 @@ const {
  * @param {string} store - The ID for which store you want the products. Required.
  *
  * @description
- * Lists all existing products in the marketplace.
+ * Lists all existing and active products in the specified store.
  *
- * @returns {String[]} The existing list of stores.
+ * @returns {String[]} The existing list of products.
  */
 const listProducts = async (req, res) => {
   try {
@@ -35,6 +36,27 @@ const listProducts = async (req, res) => {
     auditLog({
       message: error.message,
       location: 'GET /v1/product',
+      severity: 'ERROR',
+    });
+    res.status(400).json(error);
+  }
+};
+
+/**
+ * @description
+ * Lists all inactive products in the marketplace.
+ *
+ * @returns {String[]} The existing list of inactive products.
+ */
+const listInactiveProducts = async (req, res) => {
+  try {
+    const inactiveProductList = await listInactiveProductsService();
+
+    res.status(200).json(inactiveProductList);
+  } catch (error) {
+    auditLog({
+      message: error.message,
+      location: 'GET /v1/product/inactive',
       severity: 'ERROR',
     });
     res.status(400).json(error);
@@ -100,5 +122,6 @@ const createProduct = async (req, res) => {
 
 module.exports = {
   listProducts,
+  listInactiveProducts,
   createProduct,
 };

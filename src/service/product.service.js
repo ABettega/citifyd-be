@@ -1,5 +1,6 @@
 const {
   listProductsDal,
+  listInactiveProductsDal,
   createProductDal,
 } = require('../dal/product.dal');
 
@@ -22,7 +23,26 @@ const listProductsService = async (storeId) => {
 
     return {
       success: true,
-      storeId,
+      entries: fixedProductList.length,
+      products: fixedProductList,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const listInactiveProductsService = async () => {
+  try {
+    const inactiveProductList = await listInactiveProductsDal();
+
+    const fixedProductList = inactiveProductList.map((product) => {
+      const fixedProduct = { ...product };
+      fixedProduct.productValue /= 100;
+      return fixedProduct;
+    });
+
+    return {
+      success: true,
       entries: fixedProductList.length,
       products: fixedProductList,
     };
@@ -59,5 +79,6 @@ const createProductService = async ({
 
 module.exports = {
   listProductsService,
+  listInactiveProductsService,
   createProductService,
 };
