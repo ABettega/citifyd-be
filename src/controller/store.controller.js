@@ -49,6 +49,7 @@ const createStore = async (req, res) => {
       || fee > 100
     ) {
       res.status(400).json({
+        success: false,
         message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
@@ -62,14 +63,20 @@ const createStore = async (req, res) => {
         location: 'POST /v1/store',
         severity: 'INFO',
       });
-      res.status(200).json('Store inserted successfully!');
+      res.status(200).json({
+        success: true,
+        message: 'Store inserted successfully!',
+      });
     } else {
       auditLog({
         message: `There was an attempt to create a new store, but it failed! Error: ${storeCreationResult.message}`,
         location: 'POST /v1/store',
         severity: 'WARN',
       });
-      res.status(400).json(storeCreationResult.message);
+      res.status(400).json({
+        success: false,
+        message: storeCreationResult.message,
+      });
     }
   } catch (error) {
     auditLog({
@@ -105,6 +112,7 @@ const updateStore = async (req, res) => {
       || fee > 100
     ) {
       res.status(400).json({
+        success: false,
         message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
@@ -118,14 +126,20 @@ const updateStore = async (req, res) => {
         location: 'PUT /v1/store',
         severity: 'INFO',
       });
-      res.status(200).json(storeUpdateResult.message);
+      res.status(200).json({
+        success: true,
+        message: storeUpdateResult.message,
+      });
     } else {
       auditLog({
         message: `There was an attempt to update the store with ID ${storeId}, but an error occurred! Error: ${storeUpdateResult.message}`,
         location: 'PUT /v1/store',
         severity: 'WARN',
       });
-      res.status(400).json(storeUpdateResult.message);
+      res.status(400).json({
+        success: false,
+        message: storeUpdateResult.message,
+      });
     }
   } catch (error) {
     auditLog({

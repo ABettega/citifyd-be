@@ -1,8 +1,8 @@
 const { auditLog } = require('../util/logger');
 const {
   listProductsService,
-  listInactiveProductsService,
   createProductService,
+  deleteProductService,
   // updateStoreService,
 } = require('../service/product.service');
 
@@ -10,9 +10,9 @@ const {
  * @param {string} store - The ID of which store you want the products from. Required.
  *
  * @description
- * Lists all existing and active products from the specified store.
+ * Lists all existing products in the specified store.
  *
- * @returns {String[]} The existing list of active products for the specified store.
+ * @returns {String[]} The existing list of products for the specified store.
  */
 const listProducts = async (req, res) => {
   try {
@@ -24,6 +24,7 @@ const listProducts = async (req, res) => {
       !storeId
     ) {
       res.status(400).json({
+        success: false,
         message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
@@ -36,27 +37,6 @@ const listProducts = async (req, res) => {
     auditLog({
       message: error.message,
       location: 'GET /v1/product',
-      severity: 'ERROR',
-    });
-    res.status(400).json(error);
-  }
-};
-
-/**
- * @description
- * Lists all inactive products in the marketplace.
- *
- * @returns {String[]} The existing list of inactive products.
- */
-const listInactiveProducts = async (req, res) => {
-  try {
-    const inactiveProductList = await listInactiveProductsService();
-
-    res.status(200).json(inactiveProductList);
-  } catch (error) {
-    auditLog({
-      message: error.message,
-      location: 'GET /v1/product/inactive',
       severity: 'ERROR',
     });
     res.status(400).json(error);
@@ -89,6 +69,7 @@ const createProduct = async (req, res) => {
       || value < 0
     ) {
       res.status(400).json({
+        success: false,
         message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
@@ -102,14 +83,77 @@ const createProduct = async (req, res) => {
         location: 'POST /v1/product',
         severity: 'INFO',
       });
-      res.status(200).json('Product inserted successfully!');
+      res.status(200).json({
+        success: true,
+        message: 'Product inserted successfully!',
+      });
     } else {
       auditLog({
         message: `There was an attempt to create a new product for store ${storeId}, but it failed! Error: ${productCreationResult.message}`,
         location: 'POST /v1/product',
         severity: 'WARN',
       });
-      res.status(400).json(productCreationResult.message);
+      res.status(400).json({
+        success: false,
+        message: productCreationResult.message,
+      });
+    }
+  } catch (error) {
+    auditLog({
+      message: error.message,
+      location: 'POST /v1/product',
+      severity: 'ERROR',
+    });
+    res.status(400).json(error);
+  }
+};
+
+/**
+ * @param {string} productId - The ID for the product being deleted. Required.
+ *
+ * @description
+ * Deletes an existing product.
+ *
+ * @returns {String} A message confirming the product deletion.
+ */
+const deleteProduct = async (req, res) => {
+  try {
+    const {
+      productId,
+    } = req.params;
+
+    if (
+      !productId
+    ) {
+      res.status(400).json({
+        success: false,
+        message: 'Malformed request - Parameter(s) missing or invalid',
+      });
+      return;
+    }
+
+    const productDeletionResult = await deleteProductService(productId);
+
+    if (productDeletionResult.success) {
+      auditLog({
+        message: `Product ${productId} has been deleted from the database!`,
+        location: 'DELETE /v1/product',
+        severity: 'INFO',
+      });
+      res.status(200).json({
+        success: true,
+        message: 'Product deleted successfully!',
+      });
+    } else {
+      auditLog({
+        message: `There was an attempt to delete product ${productId}, but it failed! Error: ${productDeletionResult.message}`,
+        location: 'POST /v1/product',
+        severity: 'WARN',
+      });
+      res.status(400).json({
+        success: false,
+        message: productDeletionResult.message,
+      });
     }
   } catch (error) {
     auditLog({
@@ -123,6 +167,6 @@ const createProduct = async (req, res) => {
 
 module.exports = {
   listProducts,
-  listInactiveProducts,
   createProduct,
+  deleteProduct,
 };

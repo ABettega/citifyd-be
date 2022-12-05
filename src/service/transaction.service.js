@@ -47,7 +47,6 @@ const createTransactionService = async (productId) => {
 
     const transactionDetails = {
       storeId,
-      productId,
       productName,
       valueFull,
       valueStore,

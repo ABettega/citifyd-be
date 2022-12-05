@@ -1,7 +1,7 @@
 const {
   listProductsDal,
-  listInactiveProductsDal,
   createProductDal,
+  deleteProductDal,
 } = require('../dal/product.dal');
 
 const listProductsService = async (storeId) => {
@@ -16,26 +16,6 @@ const listProductsService = async (storeId) => {
     }
 
     const fixedProductList = productList.map((product) => {
-      const fixedProduct = { ...product };
-      fixedProduct.productValue /= 100;
-      return fixedProduct;
-    });
-
-    return {
-      success: true,
-      entries: fixedProductList.length,
-      products: fixedProductList,
-    };
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const listInactiveProductsService = async () => {
-  try {
-    const inactiveProductList = await listInactiveProductsDal();
-
-    const fixedProductList = inactiveProductList.map((product) => {
       const fixedProduct = { ...product };
       fixedProduct.productValue /= 100;
       return fixedProduct;
@@ -77,8 +57,24 @@ const createProductService = async ({
   }
 };
 
+const deleteProductService = async (productId) => {
+  try {
+    const productDeletionResult = await deleteProductDal(productId);
+
+    return productDeletionResult ? {
+      success: true,
+      message: 'Product deleted successfully!',
+    } : {
+      success: false,
+      message: 'Specified product does not exist!',
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   listProductsService,
-  listInactiveProductsService,
   createProductService,
+  deleteProductService,
 };

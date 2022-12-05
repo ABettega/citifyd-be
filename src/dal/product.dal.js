@@ -17,31 +17,11 @@ const listProductsDal = async (storeId) => {
         p.id as "productId",
         p.store_id as "storeId",
         p.product_name as "productName",
-        p.product_value as "productValue",
-        p.product_active as "productActive"
-      FROM product p
-      WHERE
-        p.store_id = ${storeId}
-        AND p.product_active = TRUE;
-      ;
-    `;
-
-    return queryResult;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const listInactiveProductsDal = async () => {
-  try {
-    const queryResult = await sql`
-      SELECT
-        p.id as "productId",
-        p.store_id as "storeId",
-        p.product_name as "productName",
         p.product_value as "productValue"
       FROM product p
-      WHERE p.product_active = FALSE;
+      WHERE
+        p.store_id = ${storeId};
+      ;
     `;
 
     return queryResult;
@@ -69,12 +49,35 @@ const createProductDal = async ({
     await sql`
       INSERT INTO product
       (
-        product_name, product_value, product_active, store_id
+        product_name, product_value, store_id
       )
       VALUES
       (
-        ${name}, ${value}, TRUE, ${storeId}
+        ${name}, ${value}, ${storeId}
       );
+    `;
+
+    return true;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteProductDal = async (productId) => {
+  try {
+    const validProductIdResult = await sql`
+      SELECT p.id
+      FROM product p
+      WHERE p.id = ${productId};
+    `;
+
+    if (validProductIdResult.length === 0) {
+      return false;
+    }
+
+    await sql`
+      DELETE FROM product p
+      WHERE p.id = ${productId};
     `;
 
     return true;
@@ -85,6 +88,6 @@ const createProductDal = async ({
 
 module.exports = {
   listProductsDal,
-  listInactiveProductsDal,
   createProductDal,
+  deleteProductDal,
 };

@@ -49,6 +49,7 @@ const createTransaction = async (req, res) => {
       !productId
     ) {
       res.status(400).json({
+        success: false,
         message: 'Malformed request - Parameter(s) missing or invalid',
       });
       return;
@@ -58,18 +59,24 @@ const createTransaction = async (req, res) => {
 
     if (transactionCreationResult.success) {
       auditLog({
-        message: `A new transaction has been made in the database, for product  ${productId}!`,
+        message: `A new transaction has been made in the database, for product ${productId}!`,
         location: 'POST /v1/transaction',
         severity: 'INFO',
       });
-      res.status(200).json('Transaction successful!');
+      res.status(200).json({
+        success: true,
+        message: 'Transaction successful!',
+      });
     } else {
       auditLog({
         message: `There was an attempt to create a new transaction, but it failed! Error: ${transactionCreationResult.message}`,
         location: 'POST /v1/transaction',
         severity: 'WARN',
       });
-      res.status(400).json(transactionCreationResult.message);
+      res.status(400).json({
+        success: false,
+        message: transactionCreationResult.message,
+      });
     }
   } catch (error) {
     auditLog({

@@ -6,12 +6,12 @@ VALUES
     ('Store 3', 1);
 
 INSERT INTO product
-    (product_name, product_value, product_active, store_id)
+    (product_name, product_value, store_id)
 VALUES
-    ('Toothpaste', 500, TRUE, 1),
-    ('Toothpaste', 500, TRUE, 2),
-    ('Toothpaste', 500, TRUE, 3),
-    ('Toothbrush', 1500, TRUE, 1),
-    ('Toothbrush', 1500, TRUE, 2),
-    ('Toothbrush', 1500, TRUE, 3);
+    ('Toothpaste', 500, 1),
+    ('Toothpaste', 500, 2),
+    ('Toothpaste', 500, 3),
+    ('Toothbrush', 1500, 1),
+    ('Toothbrush', 1500, 2),
+    ('Toothbrush', 1500, 3);
 

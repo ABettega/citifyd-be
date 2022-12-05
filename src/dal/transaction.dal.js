@@ -8,7 +8,6 @@ const listTransactionsDal = async (storeId) => {
       SELECT
         t.id as "transactionId",
         t.store_id as "storeId",
-        t.product_id as "productId",
         t.product_name_at_transaction as "productNameAtTransaction",
         t.value_full as "pricePaid",
         t.value_store as "valueStore",
@@ -31,8 +30,7 @@ const getProductAndStoreInformationDal = async (productId) => {
       SELECT p.id
       FROM product p
       WHERE
-        p.id = ${productId}
-        AND p.product_active = TRUE;
+        p.id = ${productId};
     `;
 
     if (!validProductIdResult) {
@@ -48,9 +46,7 @@ const getProductAndStoreInformationDal = async (productId) => {
       FROM product p
       JOIN store s
         ON s.id = p.store_id
-      WHERE 
-        p.product_active = TRUE
-        AND p.id = ${productId};
+      WHERE p.id = ${productId};
     `;
 
     return queryResult?.[0];
@@ -61,7 +57,6 @@ const getProductAndStoreInformationDal = async (productId) => {
 
 const createTransactionDal = async ({
   storeId,
-  productId,
   productName,
   valueFull,
   valueStore,
@@ -72,15 +67,15 @@ const createTransactionDal = async ({
     const transactionInsertResult = await sql`
       INSERT INTO transaction
       (
-        store_id, product_id, product_name_at_transaction,
-        value_full, value_store, value_marketplace,
-        value_pay_gateway, transaction_date
+        store_id, product_name_at_transaction, value_full,
+        value_store, value_marketplace, value_pay_gateway,
+        transaction_date
       )
       VALUES
       (
-        ${storeId}, ${productId}, ${productName},
-        ${valueFull}, ${valueStore}, ${valueMarketplace},
-        ${valuePayGateway}, NOW()::timestamp
+        ${storeId}, ${productName}, ${valueFull},
+        ${valueStore}, ${valueMarketplace}, ${valuePayGateway},
+        NOW()::timestamp
       );
     `;
 

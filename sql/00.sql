@@ -9,7 +9,6 @@ CREATE TABLE product (
     id INT GENERATED ALWAYS AS IDENTITY,
     product_name VARCHAR(255) NOT NULL,
     product_value INTEGEr NOT NULL,
-    product_active BOOLEAN NOT NULL,
     store_id INT NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT fk_store_id
@@ -20,7 +19,6 @@ CREATE TABLE product (
 CREATE TABLE transaction (
     id INT GENERATED ALWAYS AS IDENTITY,
     store_id INT NOT NULL,
-    product_id INT NOT NULL,
     product_name_at_transaction VARCHAR(255) NOT NULL,
     value_full INTEGER NOT NULL,
     value_store INTEGER NOT NULL,
@@ -30,10 +28,7 @@ CREATE TABLE transaction (
     PRIMARY KEY(id),
     CONSTRAINT fk_store_id
         FOREIGN KEY(store_id)
-            REFERENCES store(id),
-    CONSTRAINT fk_product_id
-        FOREIGN KEY(product_id)
-            REFERENCES product(id)
+            REFERENCES store(id)
 );
 
 CREATE TABLE audit_log (
