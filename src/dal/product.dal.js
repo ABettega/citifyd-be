@@ -1,20 +1,27 @@
 const sql = require('./database');
 
-const listProductsDal = async () => {
+const listProductsDal = async (storeId) => {
   try {
+    const validStoreIdResult = await sql`
+      SELECT s.id
+      FROM store s
+      WHERE s.id = ${storeId};
+    `;
+
+    if (validStoreIdResult.length === 0) {
+      return false;
+    }
+
     const queryResult = await sql`
       SELECT
         p.product_name as productName,
         p.product_value as productValue,
         p.product_active as productStatus
-      FROM product p;
+      FROM product p
+      WHERE p.store_id = ${storeId};
     `;
 
-    return {
-      success: true,
-      entries: queryResult.length,
-      products: queryResult,
-    };
+    return queryResult;
   } catch (error) {
     throw new Error(error);
   }
@@ -23,23 +30,31 @@ const listProductsDal = async () => {
 const createProductDal = async ({
   name,
   value,
+  storeId,
 }) => {
   try {
+    const validStoreIdResult = await sql`
+      SELECT s.id
+      FROM store s
+      WHERE s.id = ${storeId};
+    `;
+
+    if (validStoreIdResult.length === 0) {
+      return false;
+    }
+
     await sql`
       INSERT INTO product
       (
-        product_name, product_value, product_active
+        product_name, product_value, product_active, store_id
       )
       VALUES
       (
-        ${name}, ${value}, TRUE
+        ${name}, ${value}, TRUE, ${storeId}
       );
     `;
 
-    return {
-      success: true,
-      message: 'Product created successfully!',
-    };
+    return true;
   } catch (error) {
     throw new Error(error);
   }

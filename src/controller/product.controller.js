@@ -6,6 +6,8 @@ const {
 } = require('../service/product.service');
 
 /**
+ * @param {string} store - The ID for which store you want the products. Required.
+ *
  * @description
  * Lists all existing products in the marketplace.
  *
@@ -13,7 +15,20 @@ const {
  */
 const listProducts = async (req, res) => {
   try {
-    const productList = await listProductsService();
+    const {
+      storeId,
+    } = req.params;
+
+    if (
+      !storeId
+    ) {
+      res.status(400).json({
+        message: 'Malformed request - Parameter(s) missing or invalid',
+      });
+      return;
+    }
+
+    const productList = await listProductsService(storeId);
 
     res.status(200).json(productList);
   } catch (error) {
@@ -41,10 +56,12 @@ const createProduct = async (req, res) => {
     const {
       name,
       value,
+      storeId,
     } = req.body;
 
     if (
       !name
+      || !storeId
       || !value
       || value < 0
     ) {
@@ -54,18 +71,18 @@ const createProduct = async (req, res) => {
       return;
     }
 
-    const productCreationResult = await createProductService({ name, value });
+    const productCreationResult = await createProductService({ name, value, storeId });
 
     if (productCreationResult.success) {
       auditLog({
-        message: `A new product has been created in the database, named ${name}, with a value of $${value}!`,
+        message: `A new product has been created in the database for store ${storeId}, named ${name}, with a value of $${value}!`,
         location: 'POST /v1/product',
         severity: 'INFO',
       });
       res.status(200).json('Product inserted successfully!');
     } else {
       auditLog({
-        message: `There was an attempt to create a new product, but it failed! Error: ${productCreationResult.message}`,
+        message: `There was an attempt to create a new product for store ${storeId}, but it failed! Error: ${productCreationResult.message}`,
         location: 'POST /v1/product',
         severity: 'WARN',
       });
