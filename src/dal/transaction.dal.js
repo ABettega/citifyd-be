@@ -6,15 +6,15 @@ const listTransactionsDal = async (storeId) => {
 
     const queryResult = await sql`
       SELECT
-        t.id,
-        t.store_id,
-        t.product_id,
-        t.product_name_at_transaction,
-        t.value_full,
-        t.value_store,
-        t.value_marketplace,
-        t.value_pay_gateway,
-        t.transaction_date
+        t.id as "transactionId",
+        t.store_id as "storeId",
+        t.product_id as "productId",
+        t.product_name_at_transaction as "productNameAtTransaction",
+        t.value_full as "pricePaid",
+        t.value_store as "valueStore",
+        t.value_marketplace as "valueMarketplace",
+        t.value_pay_gateway as "valuePayGateway",
+        t.transaction_date as "transactionDate"
       FROM transaction t
       ${storeId ? specifiedStoreQuery(storeId) : sql``};
     `;
@@ -41,10 +41,10 @@ const getProductAndStoreInformationDal = async (productId) => {
 
     const queryResult = await sql`
       SELECT
-        p.product_name,
-        p.product_value,
-        p.store_id,
-        s.store_fee
+        p.product_name as "productName",
+        p.product_value as "productValue",
+        p.store_id as "storeId",
+        s.store_fee as "storeFee"
       FROM product p
       JOIN store s
         ON s.id = p.store_id

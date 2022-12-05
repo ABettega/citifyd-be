@@ -24,11 +24,18 @@ const createTransactionService = async (productId) => {
   try {
     const productAndStoreInformation = await getProductAndStoreInformationDal(productId);
 
+    if (!productAndStoreInformation) {
+      return {
+        success: false,
+        message: 'Transaction not successful!',
+      };
+    }
+
     const {
-      product_name: productName,
-      product_value: productValue,
-      store_id: storeId,
-      store_fee: storeFee,
+      productName,
+      productValue,
+      storeId,
+      storeFee,
     } = productAndStoreInformation;
 
     const {

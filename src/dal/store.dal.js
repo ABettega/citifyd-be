@@ -4,8 +4,8 @@ const listStoresDal = async () => {
   try {
     const queryResult = await sql`
       SELECT
-        s.store_name as storeName,
-        s.store_fee as storeFee
+        s.store_name as "storeName",
+        s.store_fee as "storeFee"
       FROM store s;
     `;
 
