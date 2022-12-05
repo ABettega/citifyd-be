@@ -20,7 +20,10 @@ const listProductsDal = async (storeId) => {
         p.product_value as "productValue",
         p.product_active as "productActive"
       FROM product p
-      WHERE p.store_id = ${storeId};
+      WHERE
+        p.store_id = ${storeId}
+        AND p.product_active = TRUE;
+      ;
     `;
 
     return queryResult;
