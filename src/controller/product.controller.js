@@ -7,12 +7,12 @@ const {
 } = require('../service/product.service');
 
 /**
- * @param {string} store - The ID for which store you want the products. Required.
+ * @param {string} store - The ID of which store you want the products from. Required.
  *
  * @description
- * Lists all existing and active products in the specified store.
+ * Lists all existing and active products from the specified store.
  *
- * @returns {String[]} The existing list of products.
+ * @returns {String[]} The existing list of active products for the specified store.
  */
 const listProducts = async (req, res) => {
   try {
@@ -67,6 +67,7 @@ const listInactiveProducts = async (req, res) => {
  * @param {string} name - The name for the product being created. Required.
  * @param {string} value - The value for that particular product. Required.
  * Only positive values are allowed.
+ * @param {string} storeId - The ID for the store where the product is being created. Required.
  *
  * @description
  * Creates a new product with the specified name and value.
