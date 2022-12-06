@@ -16,6 +16,7 @@ app.use('/v1/transaction', transactionApi);
 
 app.get('*', (req, res) => {
   res.status(404).json({
+    success: false,
     message: 'Not found!',
   });
 });
