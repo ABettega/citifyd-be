@@ -2,6 +2,7 @@ const {
   listProductsDal,
   createProductDal,
   deleteProductDal,
+  updateProductDal,
 } = require('../dal/product.dal');
 
 const listProductsService = async (storeId) => {
@@ -73,8 +74,32 @@ const deleteProductService = async (productId) => {
   }
 };
 
+const updateProductService = async ({
+  productId,
+  name,
+  value,
+}) => {
+  try {
+    const valueInCents = Math.round(value * 100);
+
+    const productUpdateResult = await updateProductDal({
+      productId,
+      name,
+      value: valueInCents,
+    });
+
+    return {
+      success: productUpdateResult.success,
+      message: productUpdateResult.message,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   listProductsService,
   createProductService,
   deleteProductService,
+  updateProductService,
 };

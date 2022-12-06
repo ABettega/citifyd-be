@@ -19,6 +19,7 @@ CREATE TABLE product (
 CREATE TABLE transaction (
     id INT GENERATED ALWAYS AS IDENTITY,
     store_id INT NOT NULL,
+    product_id INT NOT NULL,
     product_name_at_transaction VARCHAR(255) NOT NULL,
     value_full INTEGER NOT NULL,
     value_store INTEGER NOT NULL,

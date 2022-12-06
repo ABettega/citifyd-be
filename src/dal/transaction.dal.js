@@ -8,6 +8,7 @@ const listTransactionsDal = async (storeId) => {
       SELECT
         t.id as "transactionId",
         t.store_id as "storeId",
+        t.product_id as "productId",
         t.product_name_at_transaction as "productNameAtTransaction",
         t.value_full as "pricePaid",
         t.value_store as "valueStore",
@@ -57,6 +58,7 @@ const getProductAndStoreInformationDal = async (productId) => {
 
 const createTransactionDal = async ({
   storeId,
+  productId,
   productName,
   valueFull,
   valueStore,
@@ -67,15 +69,15 @@ const createTransactionDal = async ({
     const transactionInsertResult = await sql`
       INSERT INTO transaction
       (
-        store_id, product_name_at_transaction, value_full,
-        value_store, value_marketplace, value_pay_gateway,
-        transaction_date
+        store_id, product_id, product_name_at_transaction,
+        value_full, value_store, value_marketplace,
+        value_pay_gateway, transaction_date
       )
       VALUES
       (
-        ${storeId}, ${productName}, ${valueFull},
-        ${valueStore}, ${valueMarketplace}, ${valuePayGateway},
-        NOW()::timestamp
+        ${storeId}, ${productId}, ${productName},
+        ${valueFull}, ${valueStore}, ${valueMarketplace},
+        ${valuePayGateway}, NOW()::timestamp
       );
     `;
 

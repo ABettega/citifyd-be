@@ -3,7 +3,7 @@ const {
   listProductsService,
   createProductService,
   deleteProductService,
-  // updateStoreService,
+  updateProductService,
 } = require('../service/product.service');
 
 /**
@@ -167,8 +167,72 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+/**
+ * @param {string} name - The new name for the specified product
+ * @param {string} value - The new value for the specified product
+ * @param {number} productId - The ID for the product being updated
+ *
+ * @description
+ * Updates an existing product based on the ID.
+ *
+ * @returns {String} A message confirming the product update.
+ */
+const updateProduct = async (req, res) => {
+  try {
+    const {
+      productId,
+      name,
+      value,
+    } = req.body;
+
+    if (
+      !productId
+      || typeof (productId) !== 'number'
+      || (value !== undefined && typeof (value) !== 'number')
+    ) {
+      res.status(400).json({
+        success: false,
+        message: 'Malformed request - Parameter(s) missing or invalid',
+      });
+      return;
+    }
+
+    const productUpdateResult = await updateProductService({ productId, name, value });
+
+    if (productUpdateResult.success) {
+      auditLog({
+        message: `The product with ID ${productId} has been updated! The changes are ${JSON.stringify({ name, value })}!`,
+        location: 'PUT /v1/product',
+        severity: 'INFO',
+      });
+      res.status(200).json({
+        success: true,
+        message: productUpdateResult.message,
+      });
+    } else {
+      auditLog({
+        message: `There was an attempt to update the product with ID ${productId}, but an error occurred! Error: ${productUpdateResult.message}`,
+        location: 'PUT /v1/product',
+        severity: 'WARN',
+      });
+      res.status(400).json({
+        success: false,
+        message: productUpdateResult.message,
+      });
+    }
+  } catch (error) {
+    auditLog({
+      message: error.message,
+      location: 'PUT /v1/product',
+      severity: 'ERROR',
+    });
+    res.status(400).json(error);
+  }
+};
+
 module.exports = {
   listProducts,
   createProduct,
   deleteProduct,
+  updateProduct,
 };

@@ -86,8 +86,48 @@ const deleteProductDal = async (productId) => {
   }
 };
 
+const updateProductDal = async ({
+  productId,
+  name,
+  value,
+}) => {
+  try {
+    const validIdResult = await sql`
+      SELECT id
+      FROM product
+      WHERE id = ${productId};
+    `;
+
+    if (!validIdResult) {
+      return {
+        success: false,
+        message: 'The specified product does not exist!',
+      };
+    }
+
+    const productObject = {
+      ...(name ? { product_name: name } : {}),
+      ...(value ? { product_value: value } : {}),
+    };
+
+    await sql`
+      UPDATE product p
+      SET ${sql(productObject)}
+      WHERE p.id = ${productId};
+    `;
+
+    return {
+      success: true,
+      message: 'Product updated successfully!',
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   listProductsDal,
   createProductDal,
   deleteProductDal,
+  updateProductDal,
 };

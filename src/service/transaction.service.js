@@ -47,6 +47,7 @@ const getTransactionDetailsService = async (productId) => {
 
     const transactionDetails = {
       storeId,
+      productId,
       productName,
       valueFull,
       valueStore,
@@ -65,6 +66,7 @@ const getTransactionDetailsService = async (productId) => {
 
 const createTransactionService = async ({
   storeId,
+  productId,
   productName,
   valueFull,
   valueStore,
@@ -74,6 +76,7 @@ const createTransactionService = async ({
   try {
     const transactionCreationResult = await createTransactionDal({
       storeId,
+      productId,
       productName,
       valueFull,
       valueStore,
