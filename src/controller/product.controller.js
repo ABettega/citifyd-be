@@ -1,4 +1,5 @@
 const { auditLog } = require('../util/logger');
+const { checkForInvalidInteger } = require('../util/helper');
 const {
   listProductsService,
   createProductService,
@@ -126,6 +127,7 @@ const deleteProduct = async (req, res) => {
 
     if (
       !productId
+      || checkForInvalidInteger(productId)
     ) {
       res.status(400).json({
         success: false,

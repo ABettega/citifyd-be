@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 const transactionCalculator = ({ productValue, storeFee }) => {
   let valueCalculating = productValue;
 
@@ -17,6 +18,10 @@ const transactionCalculator = ({ productValue, storeFee }) => {
   };
 };
 
+const checkForInvalidInteger = (parameter) => isNaN(parameter)
+    || parameter % 1 > 0;
+
 module.exports = {
   transactionCalculator,
+  checkForInvalidInteger,
 };
