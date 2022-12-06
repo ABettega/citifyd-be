@@ -45,6 +45,7 @@ const createStore = async (req, res) => {
 
     if (
       !name
+      || typeof (fee) !== 'number'
       || fee < 1
       || fee > 100
     ) {
@@ -108,7 +109,9 @@ const updateStore = async (req, res) => {
 
     if (
       !storeId
-      || fee < 0
+      || typeof (storeId) !== 'number'
+      || typeof (fee) !== 'number'
+      || fee < 1
       || fee > 100
     ) {
       res.status(400).json({

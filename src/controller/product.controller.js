@@ -66,6 +66,8 @@ const createProduct = async (req, res) => {
       !name
       || !storeId
       || !value
+      || typeof (storeId) !== 'number'
+      || typeof (value) !== 'number'
       || value < 0
     ) {
       res.status(400).json({
