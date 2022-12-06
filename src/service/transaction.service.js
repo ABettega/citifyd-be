@@ -20,14 +20,14 @@ const listTransactionsService = async (storeId) => {
   }
 };
 
-const createTransactionService = async (productId) => {
+const getTransactionDetailsService = async (productId) => {
   try {
     const productAndStoreInformation = await getProductAndStoreInformationDal(productId);
 
     if (!productAndStoreInformation) {
       return {
         success: false,
-        message: 'Transaction not successful!',
+        message: 'Error while getting product or store information!',
       };
     }
 
@@ -54,7 +54,32 @@ const createTransactionService = async (productId) => {
       valuePayGateway,
     };
 
-    const transactionCreationResult = await createTransactionDal(transactionDetails);
+    return {
+      success: true,
+      transactionDetails,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const createTransactionService = async ({
+  storeId,
+  productName,
+  valueFull,
+  valueStore,
+  valueMarketplace,
+  valuePayGateway,
+}) => {
+  try {
+    const transactionCreationResult = await createTransactionDal({
+      storeId,
+      productName,
+      valueFull,
+      valueStore,
+      valueMarketplace,
+      valuePayGateway,
+    });
 
     if (!transactionCreationResult) {
       return {
@@ -74,5 +99,6 @@ const createTransactionService = async (productId) => {
 
 module.exports = {
   listTransactionsService,
+  getTransactionDetailsService,
   createTransactionService,
 };

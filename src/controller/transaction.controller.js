@@ -2,6 +2,7 @@ const { auditLog } = require('../util/logger');
 const {
   listTransactionsService,
   createTransactionService,
+  getTransactionDetailsService,
 } = require('../service/transaction.service');
 
 /**
@@ -47,6 +48,7 @@ const createTransaction = async (req, res) => {
 
     if (
       !productId
+      || typeof (productId) !== 'number'
     ) {
       res.status(400).json({
         success: false,
@@ -55,7 +57,23 @@ const createTransaction = async (req, res) => {
       return;
     }
 
-    const transactionCreationResult = await createTransactionService(productId);
+    const transactionDetailsResult = await getTransactionDetailsService(productId);
+
+    if (!transactionDetailsResult.success) {
+      auditLog({
+        message: `There was an attempt to fetch the transaction details, but it failed! Error: ${transactionDetailsResult.message}`,
+        location: 'POST /v1/transaction',
+        severity: 'WARN',
+      });
+      res.status(400).json({
+        success: false,
+        message: transactionDetailsResult.message,
+      });
+      return;
+    }
+
+    const { transactionDetails } = transactionDetailsResult;
+    const transactionCreationResult = await createTransactionService(transactionDetails);
 
     if (transactionCreationResult.success) {
       auditLog({
