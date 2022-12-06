@@ -67,7 +67,7 @@ const createProduct = async (req, res) => {
       !name
       || !storeId
       || !value
-      || typeof (storeId) !== 'number'
+      || checkForInvalidInteger(storeId)
       || typeof (value) !== 'number'
       || value < 0
     ) {
@@ -189,7 +189,7 @@ const updateProduct = async (req, res) => {
 
     if (
       !productId
-      || typeof (productId) !== 'number'
+      || checkForInvalidInteger(productId)
       || (value !== undefined && typeof (value) !== 'number')
     ) {
       res.status(400).json({

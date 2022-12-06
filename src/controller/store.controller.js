@@ -1,4 +1,5 @@
 const { auditLog } = require('../util/logger');
+const { checkForInvalidInteger } = require('../util/helper');
 const {
   listStoresService,
   createStoreService,
@@ -109,7 +110,7 @@ const updateStore = async (req, res) => {
 
     if (
       !storeId
-      || typeof (storeId) !== 'number'
+      || checkForInvalidInteger(storeId)
       || (fee !== undefined && (
         typeof (fee) !== 'number'
         || fee < 1
