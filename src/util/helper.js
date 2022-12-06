@@ -8,7 +8,6 @@ const transactionCalculator = ({ productValue, storeFee }) => {
   valueCalculating -= valueMarketplace;
 
   const valueStore = valueCalculating;
-  console.log({ productValue, valueCalculating, valuePayGateway, valueMarketplace, valueStore })
 
   return {
     valueFull: productValue,
