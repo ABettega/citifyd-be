@@ -45,7 +45,11 @@ const updateStoreService = async ({
       name,
       fee,
     });
-    return storeUpdateResult;
+
+    return {
+      success: storeUpdateResult.success,
+      message: storeUpdateResult.message,
+    };
   } catch (error) {
     throw new Error(error);
   }

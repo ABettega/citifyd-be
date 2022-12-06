@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const sql = require('./database');
 
 const listStoresDal = async () => {
@@ -59,7 +60,15 @@ const updateStoreDal = async ({
       };
     }
 
+    const storeObject = {
+      ...(name ? { store_name: name } : {}),
+      ...(fee ? { store_fee: fee } : {}),
+    };
+
     await sql`
+      UPDATE store s
+      SET ${sql(storeObject)}
+      WHERE s.id = ${storeId};
     `;
 
     return {
