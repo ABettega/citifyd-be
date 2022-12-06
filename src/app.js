@@ -14,7 +14,7 @@ app.use('/v1/store', storeApi);
 app.use('/v1/product', productApi);
 app.use('/v1/transaction', transactionApi);
 
-app.get('*', (req, res) => {
+app.all('*', (req, res) => {
   res.status(404).json({
     success: false,
     message: 'Not found!',
