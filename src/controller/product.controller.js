@@ -31,7 +31,9 @@ const listProducts = async (req, res) => {
       return;
     }
 
-    const productList = await listProductsService(storeId);
+    const numericStoreId = parseInt(storeId, 10);
+
+    const productList = await listProductsService(numericStoreId);
 
     res.status(200).json(productList);
   } catch (error) {
@@ -127,7 +129,6 @@ const deleteProduct = async (req, res) => {
 
     if (
       !productId
-      || checkForInvalidInteger(productId)
     ) {
       res.status(400).json({
         success: false,
@@ -189,8 +190,10 @@ const updateProduct = async (req, res) => {
 
     if (
       !productId
+      || (!name && !value)
       || checkForInvalidInteger(productId)
       || (value !== undefined && typeof (value) !== 'number')
+      || value < 0
     ) {
       res.status(400).json({
         success: false,

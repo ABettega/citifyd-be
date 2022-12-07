@@ -110,6 +110,7 @@ const updateStore = async (req, res) => {
 
     if (
       !storeId
+      || (!name && !fee)
       || checkForInvalidInteger(storeId)
       || (fee !== undefined && (
         typeof (fee) !== 'number'

@@ -1,10 +1,12 @@
 /* eslint-disable camelcase */
+const { checkForInvalidInteger } = require('../util/helper');
 const sql = require('./database');
 
 const listStoresDal = async () => {
   try {
     const queryResult = await sql`
       SELECT
+        s.id as "storeId",
         s.store_name as "storeName",
         s.store_fee as "storeFee"
       FROM store s;
@@ -21,6 +23,19 @@ const createStoreDal = async ({
   fee,
 }) => {
   try {
+    if (
+      !name
+      || !fee
+      || typeof (fee) !== 'number'
+      || fee < 1
+      || fee > 100
+    ) {
+      return {
+        success: false,
+        message: 'Invalid or missing values!',
+      };
+    }
+
     await sql`
       INSERT INTO store
       (
@@ -47,13 +62,28 @@ const updateStoreDal = async ({
   fee,
 }) => {
   try {
+    if (
+      checkForInvalidInteger(storeId)
+      || (!name && !fee)
+      || (fee && (
+        typeof (fee) !== 'number'
+        || fee < 1
+        || fee > 100
+      ))
+    ) {
+      return {
+        success: false,
+        message: 'Invalid or missing values!',
+      };
+    }
+
     const validIdResult = await sql`
       SELECT id
       FROM store
       WHERE id = ${storeId};
     `;
 
-    if (!validIdResult) {
+    if (!validIdResult || validIdResult.length === 0) {
       return {
         success: false,
         message: 'The specified store does not exist!',

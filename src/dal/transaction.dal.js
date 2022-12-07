@@ -1,7 +1,29 @@
+/* eslint-disable no-restricted-globals */
+const { checkForInvalidInteger } = require('../util/helper');
 const sql = require('./database');
 
 const listTransactionsDal = async (storeId) => {
   try {
+    if (storeId && (
+      storeId < 1
+      || isNaN(parseInt(storeId, 10))
+      || storeId % 1 > 0
+    )) {
+      return false;
+    }
+
+    if (storeId) {
+      const validIdResult = await sql`
+      SELECT id
+      FROM store
+      WHERE id = ${storeId};
+    `;
+
+      if (!validIdResult || validIdResult.length === 0) {
+        return false;
+      }
+    }
+
     const specifiedStoreQuery = (id) => sql`WHERE t.store_id = ${id}`;
 
     const queryResult = await sql`
@@ -27,6 +49,13 @@ const listTransactionsDal = async (storeId) => {
 
 const getProductAndStoreInformationDal = async (productId) => {
   try {
+    if (
+      !productId
+      || checkForInvalidInteger(productId)
+    ) {
+      return false;
+    }
+
     const validProductIdResult = await sql`
       SELECT p.id
       FROM product p
@@ -34,7 +63,7 @@ const getProductAndStoreInformationDal = async (productId) => {
         p.id = ${productId};
     `;
 
-    if (!validProductIdResult) {
+    if (!validProductIdResult || validProductIdResult.length === 0) {
       return false;
     }
 

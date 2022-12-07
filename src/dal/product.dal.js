@@ -1,14 +1,22 @@
+const { checkForInvalidInteger } = require('../util/helper');
 const sql = require('./database');
 
 const listProductsDal = async (storeId) => {
   try {
+    if (
+      !storeId
+      || checkForInvalidInteger(storeId)
+    ) {
+      return false;
+    }
+
     const validStoreIdResult = await sql`
       SELECT s.id
       FROM store s
       WHERE s.id = ${storeId};
     `;
 
-    if (validStoreIdResult.length === 0) {
+    if (!validStoreIdResult || validStoreIdResult.length === 0) {
       return false;
     }
 
@@ -36,6 +44,16 @@ const createProductDal = async ({
   storeId,
 }) => {
   try {
+    if (
+      !name
+      || !storeId
+      || !value
+      || checkForInvalidInteger(storeId)
+      || checkForInvalidInteger(value)
+      || value < 0
+    ) {
+      return false;
+    }
     const validStoreIdResult = await sql`
       SELECT s.id
       FROM store s
@@ -65,13 +83,19 @@ const createProductDal = async ({
 
 const deleteProductDal = async (productId) => {
   try {
+    if (
+      !productId
+    ) {
+      return false;
+    }
+
     const validProductIdResult = await sql`
       SELECT p.id
       FROM product p
       WHERE p.id = ${productId};
     `;
 
-    if (validProductIdResult.length === 0) {
+    if (!validProductIdResult || validProductIdResult.length === 0) {
       return false;
     }
 
@@ -92,13 +116,25 @@ const updateProductDal = async ({
   value,
 }) => {
   try {
+    if (
+      !productId
+      || (!name && !value)
+      || checkForInvalidInteger(productId)
+      || (value && value < 0)
+    ) {
+      return {
+        success: false,
+        message: 'You must specify a valid product!',
+      };
+    }
+
     const validIdResult = await sql`
       SELECT id
       FROM product
       WHERE id = ${productId};
     `;
 
-    if (!validIdResult) {
+    if (!validIdResult || validIdResult.length === 0) {
       return {
         success: false,
         message: 'The specified product does not exist!',

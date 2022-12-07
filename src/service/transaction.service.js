@@ -6,9 +6,16 @@ const {
 
 const { transactionCalculator } = require('../util/helper');
 
-const listTransactionsService = async (storeId) => {
+const listTransactionsService = async (storeId = undefined) => {
   try {
     const transactionList = await listTransactionsDal(storeId);
+
+    if (!transactionList) {
+      return {
+        success: false,
+        message: 'Invalid parameters!',
+      };
+    }
 
     return {
       success: true,
