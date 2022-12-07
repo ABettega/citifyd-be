@@ -5,6 +5,18 @@ The environment variables are stored in the accompanying .env file, which has no
 
 There are stores and products already seeded.
 
+## HOWTO
+After cloning the project, you can run tests or run the app. There is a database (PostgreSQL) being created in both processes.
+
+For testing:
+`docker compose -f docker-compose.test.yml up --build`
+
+After testing, you should run:
+`docker compose down -v`
+
+For "production" usage:
+`docker compose -f docker-compose.yml up --build`
+
 ### Routes
 #### Store
 - GET localhost:3000/v1/store - Lists stores in the marketplace
