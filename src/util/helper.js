@@ -19,7 +19,8 @@ const transactionCalculator = ({ productValue, storeFee }) => {
 };
 
 const checkForInvalidInteger = (parameter) => isNaN(parameter)
-    || parameter % 1 > 0;
+    || parameter % 1 > 0
+    || typeof (parameter) !== 'number';
 
 module.exports = {
   transactionCalculator,
