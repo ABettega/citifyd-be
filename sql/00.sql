@@ -1,6 +1,6 @@
 CREATE TABLE store (
     id INT GENERATED ALWAYS AS IDENTITY,
-    store_name VARCHAR(20) NOT NULL,
+    store_name VARCHAR(255) NOT NULL,
     store_fee FLOAT NOT NULL DEFAULT 10,
     PRIMARY KEY(id)
 );
