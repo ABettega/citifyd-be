@@ -5,6 +5,23 @@ The environment variables are stored in the accompanying .env file, which has no
 
 There are stores and products already seeded.
 
+### Routes
+#### Store
+- GET localhost:3000/v1/store - Lists stores in the marketplace
+- POST localhost:3000/v1/store (body: { name, fee }) -  Creates a store in the marketplace
+- PUT localhost:3000/v1/store (body: { storeId, name, fee }) - Updates the specified store in the marketplace
+
+#### Product
+- GET localhost:3000/v1/product/:storeId - Gets the product list from the specified store.
+- POST localhost:3000/v1/product (body: { storeId, name, value }) - Creates a new product in the specified store.
+- DELETE localhost:3000/v1/product/:productId - Deletes the specified product. Since the product is linked to the store, there's no need to specify the store ID.
+- PUT localhost:3000/v1/product (body: { productId, name, value }) - Updates the specified product.
+
+#### Transaction
+- GET localhost:3000/v1/transaction - Lists all transactions made in the marketplace.
+- GET localhost:3000/v1/transaction/:storeId - Lists all transactions in the specified store.
+- POST localhost:3000/v1/transaction (body: { productId }) - Creates a new transaction for the specified product ID.
+
 ### Database definition
 #### General notes
 All monetary values are stored as the lowest possible unit - cents. The API receives the values as floats or integers, but the values are saved in integers as cents.
@@ -22,7 +39,7 @@ The store fee is stored as the percentage, so 10% is stored as 10, 1% is 1 and s
 - product_value (INT)
 - store_id (INT, FK (store))
 
-As mentioned, the product value is stored as an integer, containing the cents.
+As mentioned, the product value is stored as an integer, containing the cents. The product is linked to the store - a store may have a product that is not present in a different store, or may have the same product for a different value.
 
 #### transaction
 - id (INT, PK)
