@@ -8,7 +8,7 @@ CREATE TABLE store (
 CREATE TABLE product (
     id INT GENERATED ALWAYS AS IDENTITY,
     product_name VARCHAR(255) NOT NULL,
-    product_value INTEGEr NOT NULL,
+    product_value INTEGER NOT NULL,
     store_id INT NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT fk_store_id
